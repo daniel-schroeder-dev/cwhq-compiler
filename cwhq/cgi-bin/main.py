@@ -4,6 +4,7 @@ print("Content-type: text/html \n")
 """Using CGI instead of flask."""
 
 import cgi, cgitb
+
 cgitb.enable()
 
 form = cgi.FieldStorage()
@@ -17,6 +18,7 @@ data = {
     "prog": prog,
 }
 
+
 def process_java(prog):
     match = re.match(r"public class (?P<classname>\w+)", prog)
     cwd = os.getcwd() + "/cgi-bin/"
@@ -27,10 +29,11 @@ def process_java(prog):
         os.chmod(filename, 0o744)
     output = subprocess.run(f"javac -d {filename}", shell=True, capture_output=True)
     os.chmod(f"{classname}.class", 0o744)
-    output = subprocess.run(f"java -cp {cwd} {match['classname']}", shell=True, capture_output=True)
+    output = subprocess.run(
+        f"java -cp {cwd} {match['classname']}", shell=True, capture_output=True
+    )
 
     print(output.stdout.decode("utf-8"))
-
 
 
 process_lang = {
@@ -39,4 +42,3 @@ process_lang = {
 
 
 process_lang[data["lang"]]
-

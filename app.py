@@ -11,6 +11,7 @@ app.config["SECRET_KEY"] = "IFJFJ)#J@#F(F)#FJFO#@WJF"
 def index():
     return render_template("index.html")
 
+
 @app.route("/compiler", methods=["GET", "POST"])
 def compiler():
     if request.method == "POST":
@@ -28,15 +29,14 @@ def java():
     filename = classname + ".java"
     with open(filename, mode="w") as f:
         f.write(prog)
-    output = \
-        subprocess.check_output(
-            f"javac {filename} && java {classname}", shell=True
-        ).decode("utf-8")
+    output = subprocess.check_output(
+        f"javac {filename} && java {classname}", shell=True
+    ).decode("utf-8")
     session["output"] = output
     os.remove(classname + ".class")
     os.remove(filename)
     return redirect(url_for("output"))
-    
+
 
 @app.route("/output")
 def output():
